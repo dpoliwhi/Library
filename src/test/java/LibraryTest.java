@@ -1,5 +1,6 @@
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.ArrayList;
 
+import static org.junit.jupiter.api.Assertions.*;
 
 class LibraryTest {
     /*create new books*/
@@ -11,6 +12,10 @@ class LibraryTest {
     private final Book six = new Book("Вторая жизнь Уве", "Ф. Бакман");
     private final Library library = new Library();
 
+    Visitor visitor1 = new Visitor("Егор");
+    Visitor visitor2 = new Visitor("Антон");
+    Visitor visitor3 = new Visitor("Никита");
+
     public void create() {
         /*add books in the Library*/
         library.addBook(one);
@@ -20,15 +25,6 @@ class LibraryTest {
         library.addBook(five);
         library.addBook(six);
     }
-//    /*create new books*/
-//    Book one = new Book("Старик и море", "Хумингуэй");
-//    Book two = new Book("Фиеста", "Хумингуэй");
-//    Book three = new Book("Скотный двор", "Д. Оруэл");
-//    Book four = new Book("Шантарам", "П.Д. Робертс");
-//    Book five = new Book("Тревожные люди", "Ф. Бакман");
-//    Book six = new Book("Вторая жизнь Уве", "Ф. Бакман");
-//    Library library = new Library();
-//    /*add books in the Library*/
 
     @org.junit.jupiter.api.Test
     void addBook() {
@@ -59,33 +55,64 @@ class LibraryTest {
 
     @org.junit.jupiter.api.Test
     void getBooksByAuthor() {
-    }
 
-    @org.junit.jupiter.api.Test
-    void getCountOfAllBooks() {
-    }
-
-    @org.junit.jupiter.api.Test
-    void getAllBooks() {
+        String author = "Ф. Бакман";
+        ArrayList<Book> booksByAuthor = library.getBooksByAuthor(author);
+        for (Book book : booksByAuthor) {
+            assertEquals(book.getAuthor(), "Ф. Бакман");
+        }
     }
 
     @org.junit.jupiter.api.Test
     void borrowBook() {
+        create();
+        /*try to borrow the book that is not in the library*/
+        library.borrowBook(visitor1, "Тень горы");
+        assertNull(visitor1.getBorrowedBook());
+        /*try to borrow an existing book*/
+        library.borrowBook(visitor1, "Шантарам");
+        assertEquals(visitor1.getBorrowedBook().getAuthor(), "П.Д. Робертс");
+        assertTrue(four.isBorrowed());
+        /*try to borrow the same book*/
+        assertFalse(library.borrowBook(visitor2, "Шантарам"));
+        /*try to borrow the book and then borrow another book*/
+        library.borrowBook(visitor2, "Тревожные люди");
+        assertFalse(library.borrowBook(visitor2, "Вторая жизнь Уве"));
     }
 
     @org.junit.jupiter.api.Test
     void returnBook() {
+        create();
+        library.borrowBook(visitor1, "Тревожные люди");
+        library.borrowBook(visitor2, "Вторая жизнь Уве");
+        library.borrowBook(visitor3, "Фиеста");
+        assertFalse(library.returnBook(visitor2, "Фиеста"));
+        library.returnBook(visitor2, "Вторая жизнь Уве");
+        assertEquals(library.getBorrowedBooks().size(), 2);
     }
 
     @org.junit.jupiter.api.Test
     void getVisitors() {
+        create();
+        library.borrowBook(visitor1, "Фиеста");
+        library.borrowBook(visitor2, "Шантарам");
+        library.borrowBook(visitor3, "Фиеста");
+        assertEquals(library.getVisitors().size(), 2);
     }
 
     @org.junit.jupiter.api.Test
     void getBorrowedBooks() {
+        create();
+        library.borrowBook(visitor1, "Фиеста");
+        library.borrowBook(visitor2, "Шантарам");
+        assertEquals(library.getBorrowedBooks().size(), 2);
     }
 
     @org.junit.jupiter.api.Test
     void getAvailableBooks() {
+        create();
+        library.borrowBook(visitor1, "Фиеста");
+        library.borrowBook(visitor2, "Шантарам");
+        assertEquals(library.getAvailableBooks().size(), 4);
     }
 }
