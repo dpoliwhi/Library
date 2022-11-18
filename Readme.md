@@ -51,3 +51,6 @@ Visitor can't return a book for someone.
 ____
 ### Testing
 There are some tests by JUnit in *test* directory
+To run tests with Maven run this command from project directory:
+````
+mvn test
