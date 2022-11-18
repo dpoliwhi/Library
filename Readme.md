@@ -47,3 +47,7 @@ Visitor can't return a book for someone.
 
 
 - **get available books:** return list of available books which is not borrowed by someone
+
+____
+### Testing
+There are some tests by JUnit in *test* directory
