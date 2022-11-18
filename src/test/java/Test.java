@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LibraryTest {
+class Test {
     /*create new books*/
     private final Book one = new Book("Старик и море", "Хумингуэй");
     private final Book two = new Book("Фиеста", "Хумингуэй");
